@@ -6,23 +6,27 @@ module PiJeans
       id =~ /\A\d+\z/
     end
 
-    def initialize(meeting_id)
+    def initialize
+      # TODO: Detect an already running application and set started = true
+    end
+
+    def started?
+      @started
+    end
+
+    def start(meeting_id)
+      raise "cannot start if already started" if started?
       raise ArgumentError, "Meeting ID must be a number" unless self.class.valid_meeting_id?(meeting_id)
       @meeting_id = meeting_id
-    end
 
-    def launched?
-      @launched
-    end
-
-    def start
       puts "LAUNCHING #{meeting_id}"
-      @launched = true
+      @started = true
     end
 
     def stop
+      raise "cannot stop if not already started" unless started?
       puts "STOPPING #{meeting_id}"
-      @launched = false
+      @started = false
     end
   end
 end
